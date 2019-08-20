@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>   
+<!DOCTYPE mapper   
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"  
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.aowin.library.dao.LibraryDao">
+     <select id="checkAccAndPwd" resultMap="resultmap1">
+            select * from user where username=#{username} and password=#{password}
+     </select>
+     <resultMap type="user" id="resultmap1">
+            <id column="userid" property="u_userid"/>
+            <result column="username" property="u_username"/>
+            <result column="password" property="u_password"/>
+            <result column="idcard" property="u_idcard"/>
+            <result column="phone" property="u_phone"/>
+            <result column="createtime" property="u_createtime"/>
+            <result column="status" property="u_status"/>
+            <result column="owing_money" property="u_ownmoney"/>
+     </resultMap>
+     <select id="getAllBooks" resultType="book">
+            select * from book where status=1
+     </select>
+     <select id="getOwnBooks" resultMap="resultmap2" parameterType="int">
+            select re.recordid,b.bookname,u.username,re.lendtime,re.returntime,re.expiretime 
+                  from book_record re,book b,user u where re.userid=u.userid 
+                  and re.bookid=b.bookid and u.userid=#{int1}
+     </select>
+     <!--高级映射中必须重新指定表与对象的映射关系,即使表的字段名与对象的属性名一致,否则会拿不到数据  -->
+     <resultMap type="bookRecord" id="resultmap2">
+            <id column="recordid" property="recordid"/>
+            <result column="userid" property="userid"/>
+            <result column="bookid" property="bookid"/>
+            <result column="lendtime" property="lendtime"/>
+            <result column="returntime" property="returntime"/>
+            <result column="expiretime" property="expiretime"/>
+            <association property="user" javaType="user">
+				<result column="userid" property="u_userid" />
+				<result column="username" property="u_username" />
+				<result column="password" property="u_password" />
+				<result column="idcard" property="u_idcard" />
+				<result column="phone" property="u_phone" />
+				<result column="createtime" property="u_createtime" />
+				<result column="status" property="u_status" />
+				<result column="owing_money" property="u_ownmoney" />
+            </association>
+            <collection property="books" ofType="book">
+                <id column="bookid" property="bookid"/>
+                <result column="bookname" property="bookname"/>
+                <result column="author" property="author"/>
+                <result column="price" property="price"/>
+                <result column="publisher" property="publisher"/>
+                <result column="status" property="status"/>
+                <result column="bookcode" property="bookcode"/>
+            </collection>
+     </resultMap>
+     <update id="bookToBack">
+               update book_record set returntime=#{returntime} 
+               where recordid in 
+               <foreach collection="recordids" open="(" close=")" separator="," item="recordid">
+                     #{recordid}
+               </foreach>
+     </update>
+</mapper>

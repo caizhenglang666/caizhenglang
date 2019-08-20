@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="/librarySystem/jquery/jquery-1.11.1.js"></script>
+<script type="text/javascript" src="/librarySystem/js/library/bookmanager/librarymanager.js"></script>
+<script type="text/javascript" src="/librarySystem/vue/vue.min.js"></script>
+<script type="text/javascript" src="/librarySystem/vue/vue-resource.min.js"></script>
+</head>
+<body style="background-color:#D2691E;">
+    <h1>图书管理列表</h1>
+    <span style="float:right;color:blue;font-size:20px;" id="span"></span>
+    <div id="app">
+        <table border="1" cellpadding="0" cellspacing="0" width="100%">
+            <thead>
+               <tr>
+                  <th>选项</th>
+                  <th>图书名称</th>
+                  <th>图书作者</th>
+                  <th>图书价格</th>
+                  <th>出版社</th>
+                  <th>图书状态</th>
+                  <th>图书编号</th>
+                  <th>操作</th>
+               </tr>
+            </thead>
+            <tbody>
+                 <tr v-for="book in books">
+                      <td align="center"><input type="checkbox" name="boxid" value='{{book.bookid}}'/></td>
+                      <td align="center">{{book.bookname}}</td>
+                      <td align="center">{{book.author}}</td>
+                      <td align="center">{{book.price}}</td>
+                      <td align="center">{{book.publisher}}</td>
+                      <td align="center">{{book.status==1? '在馆':'已租出'}}</td>
+                      <td align="center">{{book.bookcode}}</td>
+                      <td align="center"><input type="button" value="租书"/></td>
+                 </tr>
+            </tbody>
+        </table>
+        <span><a style="text-decoration:none;" href="javascript:void(0)" @click="watchOwnRecord()">查看自己的租书记录</a></span>
+    </div>
+    <div id="div" style="display:none;width:1000px;height:400px;border:1px solid black;background-color:orange;">
+           <table width="100%" cellspacing="0" cellpadding="5" id="tab" border="1">
+                <tr>
+                   <th>选项</th>
+                   <th>图书名称</th>
+                   <th>租书人</th>
+                   <th>租书时间</th>
+                   <th>归还时间</th>
+                   <th>到期时间</th>
+                   <th>剩余天数</th>
+                </tr>
+           </table>
+           <span><input type="button" value="关闭" onclick="closeDiv()"/></span><br/>
+           <span><input type="button" value="选中归还" @click="selectedToBack()"/></span>
+    </div>
+</body>
+</html>
